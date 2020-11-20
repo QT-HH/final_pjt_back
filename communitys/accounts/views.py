@@ -13,7 +13,7 @@ def signup(request):
 
     if password != password2:
         message = {
-            error: '비밀번호가 틀립니다.'
+            'error': '비밀번호가 틀립니다.'
         }
         return Response(message, status=status.HTTP_400_BAD_REQUEST)
 
