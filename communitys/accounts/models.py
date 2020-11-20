@@ -10,4 +10,4 @@ class User(AbstractUser):
         (13, 'INTJ'), (14, 'INTP'), (15, 'INFJ'), (16, 'INFP'), 
     )
 
-    MBTI = models.CharField(max_length=50,choices=mbti_choice)
+    MBTI = models.IntegerField(choices=mbti_choice)
