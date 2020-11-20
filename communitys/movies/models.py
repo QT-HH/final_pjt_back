@@ -1,12 +1,21 @@
 from django.db import models
 
 # Create your models here.
+class Genre(models.Model):
+    name = models.CharField(max_length=50)
+
 class Movie(models.Model):
     title = models.CharField(max_length=100)
-    link = models.CharField(max_length=200)
-    image = models.CharField(max_length=200)
-    subtitle = models.CharField(max_length=50)
-    pubDate = models.IntegerField()
-    director = models.CharField(max_length=50)
-    actor = models.CharField(max_length=200)
-    userRating = models.FloatField()
+    vote_average = models.IntegerField()
+    overview = models.CharField(max_length=500, null=True)
+    release_date = models.CharField(max_length=50)
+    popularity = models.FloatField()
+    vote_count = models.IntegerField()
+    video = models.BooleanField()
+    poster_path = models.CharField(max_length=200)
+    # id = models.IntegerField(primary_key=True)
+    adult = models.BooleanField()
+    backdrop_path = models.CharField(max_length=200, null=True)
+    original_language = models.CharField(max_length=50)
+    original_title = models.CharField(max_length=100)
+    genre_ids = models.ManyToManyField(Genre)
