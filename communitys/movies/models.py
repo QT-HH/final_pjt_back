@@ -6,11 +6,11 @@ class Genre(models.Model):
 
 class Movie(models.Model):
     title = models.CharField(max_length=100)
-    vote_average = models.IntegerField()
+    vote_average = models.FloatField()
     overview = models.CharField(max_length=500, null=True)
     release_date = models.CharField(max_length=50)
     popularity = models.FloatField()
-    vote_count = models.FloatField()
+    vote_count = models.IntegerField()
     video = models.BooleanField()
     poster_path = models.CharField(max_length=200)
     # id = models.IntegerField(primary_key=True)
