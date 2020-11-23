@@ -132,3 +132,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
     "http://192.168.0.15:8080",
 ]
+
+import datetime
+JWT_AUTH = {
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),
+}

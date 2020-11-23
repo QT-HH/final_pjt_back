@@ -1,83 +1,103 @@
-# from django.shortcuts import render, redirect, get_object_or_404
-# from django.views.decorators.http import require_GET, require_POST, require_http_methods
-# from .models import Review, Comment
-# from .forms import ReviewForm, CommentForm
+from django.shortcuts import get_object_or_404
 
-# from django.http import JsonResponse
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
 
-# @require_GET
-# def index(request):
-#     reviews = Review.objects.order_by('-pk')
-#     context = {
-#         'reviews': reviews,
-#     }
-#     return render(request, 'community/index.html', context)
+from rest_framework.decorators import authentication_classes, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+
+from .serializers import ReviewSerializer, CommentSerializer, ReviewListSerializer
+from .models import Review, Comment
 
 
-# @require_http_methods(['GET', 'POST'])
-# def create(request):
-#     if request.method == 'POST':
-#         form = ReviewForm(request.POST) 
-#         if form.is_valid():
-#             review = form.save(commit=False)
-#             review.user = request.user
-#             review.save()
-#             return redirect('community:detail', review.pk)
-#     else:
-#         form = ReviewForm()
-#     context = {
-#         'form': form,
-#     }
-#     return render(request, 'community/create.html', context)
+@api_view(['GET','POST'])
+@authentication_classes([JSONWebTokenAuthentication])
+@permission_classes([IsAuthenticated])
+def review_list_create(request):
+    if request.method == 'GET':
+        reviews = Review.objects.order_by('-pk')
+        serializer = ReviewSerializer(reviews, many =True)
+        return Response(serializer.data)
+    else:
+        serializer = ReviewSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save(user= request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-# @require_GET
-# def detail(request, review_pk):
-#     review = get_object_or_404(Review, pk=review_pk)
-#     comments = review.comment_set.all()
-#     comment_form = CommentForm()
-#     context = {
-#         'review': review,
-#         'comment_form': comment_form,
-#         'comments': comments,
-#     }
-#     return render(request, 'community/detail.html', context)
+@api_view(['GET'])
+@authentication_classes([JSONWebTokenAuthentication])
+@permission_classes([IsAuthenticated])
+def review_detail(request, review_pk):
+    review = get_object_or_404(Review, pk=review_pk)
+    serializer = ArticleSerializer(review)
+    return Response(serializer.data)
 
 
-# @require_POST
-# def create_comment(request, review_pk):
-#     review = get_object_or_404(Review, pk=review_pk)
-#     comment_form = CommentForm(request.POST)
-#     if comment_form.is_valid():
-#         comment = comment_form.save(commit=False)
-#         comment.review = review
-#         comment.user = request.user
-#         comment.save()
-#         return redirect('community:detail', review.pk)
-#     context = {
-#         'comment_form': comment_form,
-#         'review': review,
-#         'comments': review.comment_set.all(),
-#     }
-#     return render(request, 'community/detail.html', context)
+@api_view(['PUT','DELETE'])
+@authentication_classes([JSONWebTokenAuthentication])
+@permission_classes([IsAuthenticated])
+def review_update_delete(request,movie_pk):
+    review = get_object_or_404(Review, pk=review_pk)
+
+    if not request.user.reviews.filter(pk=review_pk).exists():
+        return Response({'detail': '권한이 없습니다.'})
+    
+    if request.method == 'PUT':
+        serializer = ReviewSerializer(review, data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save(user= request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+    else:
+        review.delete()
+        return Response({'id': review_pk}, status=status.HTTP_204_NO_CONTENT)
 
 
-# @require_POST
-# def like(request, review_pk):
-#     if request.user.is_authenticated:
-#         review = get_object_or_404(Review, pk=review_pk)
-#         user = request.user
+@api_view(['POST'])
+@authentication_classes([JSONWebTokenAuthentication])
+@permission_classes([IsAuthenticated])
+def create_comment(request, review_pk):
+    review = get_object_or_404(Review, pk=review_pk)
+    serializer = CommentSerializer(data=request.data)
+    if serializer.is_valid(raise_exception=True):
+        serializer.save(user= request.user)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-#         if review.like_users.filter(pk=user.pk).exists():
-#             review.like_users.remove(user)
-#             liked = False
-#         else:
-#             review.like_users.add(user)
-#             liked = True
-#         # return redirect('community:index')
-#         context = {
-#             'liked':liked,
-#             'count':review.like_users.count(),
-#         }
-#         return JsonResponse(context)
-#     return redirect('accounts:login')
+
+@api_view(['GET'])
+@authentication_classes([JSONWebTokenAuthentication])
+@permission_classes([IsAuthenticated])
+def comment_list(request):
+    comments = Comment.objects.all()
+    serializer = CommentSerializer(comments, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+@authentication_classes([JSONWebTokenAuthentication])
+@permission_classes([IsAuthenticated])
+def comment_detail(request, comment_pk):
+    review = get_object_or_404(Review, pk=review_pk)
+    serializer = ArticleSerializer(review)
+    return Response(serializer.data)
+
+
+@api_view(['PUT', 'DELETE'])
+@authentication_classes([JSONWebTokenAuthentication])
+@permission_classes([IsAuthenticated])
+def comment_update_delete(request, comment_pk):
+    comment = get_object_or_404(Comment, pk=comment_pk)
+
+    if not request.user.reviews.filter(pk=review_pk).exists():
+        return Response({'detail': '권한이 없습니다.'})
+        
+    if request.method == 'PUT':
+        serializer = CommentSerializer(comment, data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save(user= request.user)
+            return Response(serializer.data)
+    else:
+        comment.delete()
+        return Response({ 'id': comment_pk }, status=status.HTTP_204_NO_CONTENT)
