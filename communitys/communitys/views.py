@@ -39,7 +39,7 @@ def review_detail(request, review_pk):
 @api_view(['PUT','DELETE'])
 @authentication_classes([JSONWebTokenAuthentication])
 @permission_classes([IsAuthenticated])
-def review_update_delete(request,movie_pk):
+def review_update_delete(request,review_pk):
     review = get_object_or_404(Review, pk=review_pk)
 
     if not request.user.reviews.filter(pk=review_pk).exists():
@@ -92,7 +92,7 @@ def comment_update_delete(request, comment_pk):
 
     if not request.user.reviews.filter(pk=review_pk).exists():
         return Response({'detail': '권한이 없습니다.'})
-        
+
     if request.method == 'PUT':
         serializer = CommentSerializer(comment, data=request.data)
         if serializer.is_valid(raise_exception=True):
