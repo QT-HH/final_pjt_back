@@ -16,8 +16,15 @@ class ReviewListSerializer(serializers.ModelSerializer):
         fields= ('id', 'title', 'movie_title',),
 
 
+class ReviewDetailSerializer(serializers.ModelSerializer):
+    comments = CommentSerializer(required=False, many=True)
+
+    class Meta:
+        model = Review
+        fields = '__all__'
+
+
 class ReviewSerializer(serializers.ModelSerializer):
-    # comments = CommentSerializer(required=False, many=True)
 
     class Meta:
         model = Review

@@ -8,7 +8,7 @@ from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
-from .serializers import ReviewSerializer, CommentSerializer, ReviewListSerializer
+from .serializers import ReviewDetailSerializer, ReviewSerializer, CommentSerializer, ReviewListSerializer
 from .models import Review, Comment
 
 
@@ -32,7 +32,7 @@ def review_list_create(request):
 @permission_classes([IsAuthenticated])
 def review_detail(request, review_pk):
     review = get_object_or_404(Review, pk=review_pk)
-    serializer = ArticleSerializer(review)
+    serializer = ReviewDetailSerializer(review)
     return Response(serializer.data)
 
 
@@ -79,8 +79,8 @@ def comment_list(request):
 @authentication_classes([JSONWebTokenAuthentication])
 @permission_classes([IsAuthenticated])
 def comment_detail(request, comment_pk):
-    review = get_object_or_404(Review, pk=review_pk)
-    serializer = ArticleSerializer(review)
+    comment = get_object_or_404(Comment, pk=comment_pk)
+    serializer = CommentSerializer(review)
     return Response(serializer.data)
 
 
