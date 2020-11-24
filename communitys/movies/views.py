@@ -4,8 +4,8 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
-from .serializers import MovieSerializer
-from .models import Movie
+from .serializers import MovieSerializer, CommentSerializer
+from .models import Movie, Comment
 
 @api_view(['GET'])
 def movie_list_create(request):
