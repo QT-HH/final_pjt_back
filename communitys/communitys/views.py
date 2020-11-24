@@ -55,33 +55,21 @@ def review_update_delete(request,review_pk):
         return Response({'id': review_pk}, status=status.HTTP_204_NO_CONTENT)
 
 
-@api_view(['POST'])
+@api_view(['GET', 'POST'])
 @authentication_classes([JSONWebTokenAuthentication])
 @permission_classes([IsAuthenticated])
-def create_comment(request, review_pk):
+def comment_list_create(request, review_pk):
     review = get_object_or_404(Review, pk=review_pk)
-    serializer = CommentSerializer(data=request.data)
-    if serializer.is_valid(raise_exception=True):
-        serializer.save(user= request.user,review= review)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-
-@api_view(['GET'])
-@authentication_classes([JSONWebTokenAuthentication])
-@permission_classes([IsAuthenticated])
-def comment_list(request):
-    comments = Comment.objects.all()
-    serializer = CommentSerializer(comments, many=True)
-    return Response(serializer.data)
-
-
-@api_view(['GET'])
-@authentication_classes([JSONWebTokenAuthentication])
-@permission_classes([IsAuthenticated])
-def comment_detail(request, comment_pk):
-    comment = get_object_or_404(Comment, pk=comment_pk)
-    serializer = CommentSerializer(review)
-    return Response(serializer.data)
+    if request.method == 'GET':
+        comments = Comment.objects.filter(review_id=review_pk)
+        serializer = CommentSerializer(comments, many=True)
+        return Response(serializer.data)
+    else:
+        serializer = CommentSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save(user= request.user,review= review)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 @api_view(['PUT', 'DELETE'])
