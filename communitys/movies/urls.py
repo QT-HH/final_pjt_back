@@ -5,4 +5,6 @@ app_name = 'movies'
 urlpatterns = [
     path('', views.movie_list_create),
     path('<int:movie_pk>/', views.movie_detail, name='movie_detail'),
+    path('<int:movie_pk>/comments/', views.comment_list_create, name='comment_list_create'),
+    path('comments/<int:comment_pk>/', views.comment_update_delete),
 ]

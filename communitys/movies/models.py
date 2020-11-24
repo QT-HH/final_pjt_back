@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 
 # Create your models here.
 class Genre(models.Model):
@@ -19,3 +20,10 @@ class Movie(models.Model):
     original_language = models.CharField(max_length=50)
     original_title = models.CharField(max_length=100)
     genre_ids = models.ManyToManyField(Genre)
+
+class Comment(models.Model):
+    content = models.CharField(max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE, related_name='comments')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='my_movie_comments')

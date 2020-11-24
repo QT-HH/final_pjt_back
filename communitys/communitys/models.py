@@ -10,7 +10,7 @@ class Review(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='reviews')
-    like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_reviews')
+    # like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_reviews')
 
 
 class Comment(models.Model):
@@ -18,4 +18,4 @@ class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     review = models.ForeignKey(Review, on_delete=models.CASCADE, related_name='comments')
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='my_review_comments')

@@ -78,7 +78,7 @@ def comment_list_create(request, review_pk):
 def comment_update_delete(request, comment_pk):
     comment = get_object_or_404(Comment, pk=comment_pk)
 
-    if not request.user.reviews.filter(pk=review_pk).exists():
+    if not request.user.my_review_comments.filter(pk=comment_pk).exists():
         return Response({'detail': '권한이 없습니다.'})
 
     if request.method == 'PUT':
