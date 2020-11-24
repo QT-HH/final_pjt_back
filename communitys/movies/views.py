@@ -4,8 +4,14 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 
+
+from rest_framework.decorators import authentication_classes, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+
 from .serializers import MovieSerializer, CommentSerializer
 from .models import Movie, Comment
+
 
 @api_view(['GET'])
 def movie_list_create(request):
@@ -22,6 +28,8 @@ def movie_detail(request, movie_pk):
 
 
 @api_view(['GET', 'POST'])
+@authentication_classes([JSONWebTokenAuthentication])
+@permission_classes([IsAuthenticated])
 def comment_list_create(request, movie_pk):
     movie = get_object_or_404(Movie, pk=movie_pk)
 
@@ -37,6 +45,8 @@ def comment_list_create(request, movie_pk):
 
 
 @api_view(['PUT', 'DELETE'])
+@authentication_classes([JSONWebTokenAuthentication])
+@permission_classes([IsAuthenticated])
 def comment_update_delete(request, comment_pk):
     comment = get_object_or_404(Comment, pk=comment_pk)
 
