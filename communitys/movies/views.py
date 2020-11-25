@@ -87,7 +87,7 @@ def recommended_1(request):
         14: [878, 9648],
         15: [18, 36],
         16: [27, 53],
-    }]
+    }
 
     movies = Movie.objects.filter(Q(genres = mbti_genres.get(request.user.MBTI)[0]) | Q(genres = mbti_genres.get(request.user.MBTI)[1])).order_by('?')[:5]
     serializer = MovieSerializer(movies, many =True)
