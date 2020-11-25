@@ -89,8 +89,9 @@ def recommanded_1(request):
         16: [27, 53],
     }
 
-    movies = Movie.objects.filter(Q(genre_ids = mbti_genres.get(request.user.MBTI)[0]) | Q(genre_ids = mbti_genres.get(request.user.MBTI)[1])).order_by('-vote_average')[:10]
-    movie = random.shuffle(movies)[0]
+    movies = Movie.objects.filter(Q(genre_ids = mbti_genres.get(request.user.MBTI)[0]) | Q(genre_ids = mbti_genres.get(request.user.MBTI)[1])).order_by('?')[:10]
+    idx = random.randint(0, 9)
+    movie = movies[idx]
     serializer = MovieSerializer(movie)
     return Response(serializer.data)
 
