@@ -69,7 +69,7 @@ def comment_update_delete(request, comment_pk):
 @api_view(['GET'])
 @authentication_classes([JSONWebTokenAuthentication])
 @permission_classes([IsAuthenticated])
-def recommended_1(request):
+def recommanded_1(request):
     mbti_genres = {
         1: [28, 10749],
         2: [10752, 80],
@@ -92,3 +92,10 @@ def recommended_1(request):
     movies = Movie.objects.filter(Q(genres = mbti_genres.get(request.user.MBTI)[0]) | Q(genres = mbti_genres.get(request.user.MBTI)[1])).order_by('?')[:5]
     serializer = MovieSerializer(movies, many =True)
     return Response(serializer.data)
+
+
+@api_view(['GET'])
+@authentication_classes([JSONWebTokenAuthentication])
+@permission_classes([IsAuthenticated])
+def recommanded_2(request):
+    pass
