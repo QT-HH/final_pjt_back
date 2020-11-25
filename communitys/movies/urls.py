@@ -9,4 +9,5 @@ urlpatterns = [
     path('comments/<int:comment_pk>/', views.comment_update_delete),
     path('recommanded_1/', views.recommanded_1, name='recommanded_1'),
     path('recommanded_2/', views.recommanded_2, name='recommanded_2'),
+    path('recommanded_3/', views.recommanded_3, name='recommanded_3'),
 ]

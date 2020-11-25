@@ -111,5 +111,14 @@ def recommanded_2(request):
     rec_movie = Movie.objects.filter(genre_ids=movie.genre_ids.all()[0].id)
     serializer = MovieSerializer(rec_movie[0])
 
+    return Response(serializer.data)
 
+
+@api_view(['GET'])
+@authentication_classes([JSONWebTokenAuthentication])
+@permission_classes([IsAuthenticated])
+def recommanded_3(request):
+    movie = Movie.objects.all().order_by('?')[0]
+    serializer = MovieSerializer(movie)
+    
     return Response(serializer.data)
