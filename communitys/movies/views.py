@@ -89,7 +89,7 @@ def recommanded_1(request):
         16: [27, 53],
     }
 
-    movies = Movie.objects.filter(Q(genres = mbti_genres.get(request.user.MBTI)[0]) | Q(genres = mbti_genres.get(request.user.MBTI)[1])).order_by('?')[:5]
+    movies = Movie.objects.filter(Q(genre_ids = mbti_genres.get(request.user.MBTI)[0]) | Q(genre_ids = mbti_genres.get(request.user.MBTI)[1])).order_by('?')[:5]
     serializer = MovieSerializer(movies, many =True)
     return Response(serializer.data)
 
@@ -98,4 +98,5 @@ def recommanded_1(request):
 @authentication_classes([JSONWebTokenAuthentication])
 @permission_classes([IsAuthenticated])
 def recommanded_2(request):
+    # comments = Comment.objects.all()
     pass
