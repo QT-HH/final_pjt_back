@@ -3,6 +3,9 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 
+from rest_framework.decorators import authentication_classes, permission_classes
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+
 from .serializers import UserSerializer
 
 # Create your views here.
@@ -24,3 +27,13 @@ def signup(request):
         user.save()
 
     return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+@api_view(['GET'])
+@authentication_classes([JSONWebTokenAuthentication])
+def getuser(request):
+    # print(request.user.MBTI)
+    # # serializer = UserSerializer(data=request.user)
+    # if serializer.is_valid(raise_exception=True):
+    #     serializer.save()
+    return Response({request.user.MBTI})

@@ -111,7 +111,7 @@ def recommanded_2(request):
     # comments = Comment.objects.filter(user_id=request.user.id, rank__gte=3).order_by('?')
     
     if not comments.exists():
-        return Response({'detail': '영화를 추천받으시려면 시청하신 영화에 평점을 등록해주세요.'})
+        return Response({'detail': False})
     
     idx = random.randint(0, len(comments)-1)
     movie = Movie.objects.get(id = comments[idx].movie_id)
@@ -119,6 +119,24 @@ def recommanded_2(request):
     serializer = MovieSerializer(rec_movie[0])
 
     return Response(serializer.data)
+
+
+@api_view(['GET'])
+@authentication_classes([JSONWebTokenAuthentication])
+@permission_classes([IsAuthenticated])
+def recommanded_comment(request):
+    comments = Comment.objects.filter(user_id=request.user.id, rank__gte=3).order_by('?')[:10]
+    # comments = Comment.objects.filter(user_id=request.user.id, rank__gte=3).order_by('?')
+    
+    if not comments.exists():
+        return Response({'detail': '영화를 추천받으시려면 시청하신 영화에 평점을 등록해주세요.'})
+    
+    idx = random.randint(0, len(comments)-1)
+    movie = Movie.objects.get(id = comments[idx].movie_id)
+    serializer = MovieSerializer(movie)
+
+    return Response(serializer.data)
+
 
 
 @api_view(['GET'])
