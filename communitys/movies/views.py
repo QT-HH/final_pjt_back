@@ -17,8 +17,15 @@ import random
 
 
 @api_view(['GET'])
-def movie_list_create(request):
+def movie_list_popular(request):
     movies = Movie.objects.all()
+    serializer = MovieSerializer(movies, many =True)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def movie_list_recent(request):
+    movies = Movie.objects.order_by('-release_date')
     serializer = MovieSerializer(movies, many =True)
     return Response(serializer.data)
 
@@ -120,5 +127,5 @@ def recommanded_2(request):
 def recommanded_3(request):
     movie = Movie.objects.all().order_by('?')[0]
     serializer = MovieSerializer(movie)
-    
+
     return Response(serializer.data)
