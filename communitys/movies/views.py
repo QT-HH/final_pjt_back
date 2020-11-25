@@ -13,6 +13,7 @@ from .serializers import MovieSerializer, CommentSerializer
 from .models import Movie, Comment
 
 from django.db.models import Q
+import random
 
 
 @api_view(['GET'])
@@ -88,6 +89,6 @@ def recommended_1(request):
         16: [27, 53],
     }]
 
-    movies = Movie.objects.filter(Q(genres = mbti_genres.get(request.user.MBTI)[0]) | Q(genres = mbti_genres.get(request.user.MBTI)[1])).order_by('-vote_average')
+    movies = Movie.objects.filter(Q(genres = mbti_genres.get(request.user.MBTI)[0]) | Q(genres = mbti_genres.get(request.user.MBTI)[1])).order_by('?')[:5]
     serializer = MovieSerializer(movies, many =True)
     return Response(serializer.data)
