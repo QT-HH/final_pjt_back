@@ -107,7 +107,7 @@ def recommanded_2(request):
         return Response({'detail': '영화를 추천받으시려면 시청하신 영화에 평점을 등록해주세요.'})
     
     # idx = random.randint(0, 9)
-    movie = Movie.objects.get(movie_id = comments[0].movie_id)
+    movie = Movie.objects.get(id = comments[0].movie_id)
     rec_movie = Movie.objects.filter(genre_ids=movie.genre_ids)
     serializer = MovieSerializer(rec_movie)
 
