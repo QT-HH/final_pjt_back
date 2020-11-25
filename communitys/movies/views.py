@@ -100,15 +100,15 @@ def recommanded_1(request):
 @authentication_classes([JSONWebTokenAuthentication])
 @permission_classes([IsAuthenticated])
 def recommanded_2(request):
-    # comments = Comment.objects.filter(user_id=request.user.id, rank__gte=3).order_by('?')[:10]
-    comments = Comment.objects.filter(user_id=request.user.id, rank__gte=3).order_by('?')
+    comments = Comment.objects.filter(user_id=request.user.id, rank__gte=3).order_by('?')[:10]
+    # comments = Comment.objects.filter(user_id=request.user.id, rank__gte=3).order_by('?')
     
     if not comments.exists():
         return Response({'detail': '영화를 추천받으시려면 시청하신 영화에 평점을 등록해주세요.'})
     
-    # idx = random.randint(0, 9)
-    movie = Movie.objects.get(id = comments[0].movie_id)
-    rec_movie = Movie.objects.filter(genre_ids=movie.genre_ids)
+    idx = random.randint(0, len(comments)-1)
+    movie = Movie.objects.get(id = comments[idx].movie_id)
+    rec_movie = Movie.objects.filter(genre_ids=movie.genre_ids.all()[0].id)
     serializer = MovieSerializer(rec_movie[0])
 
 
