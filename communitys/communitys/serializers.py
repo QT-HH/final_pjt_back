@@ -21,10 +21,12 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class ReviewListSerializer(serializers.ModelSerializer):
-    
+    user = UserSerializer()
+
     class Meta:
         model= Review
-        fields= ('id', 'title', 'movie_title',),
+        fields= ('id', 'title', 'movie_title','user')
+        read_only_fields = ('user')
 
 
 class ReviewDetailSerializer(serializers.ModelSerializer):
