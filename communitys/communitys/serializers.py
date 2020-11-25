@@ -21,7 +21,7 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class ReviewListSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
+    user = UserSerializer(required=False)
 
     class Meta:
         model= Review
@@ -31,7 +31,7 @@ class ReviewListSerializer(serializers.ModelSerializer):
 
 class ReviewDetailSerializer(serializers.ModelSerializer):
     comments = CommentSerializer(required=False, many=True)
-    user = UserSerializer()
+    user = UserSerializer(required=False)
     
     class Meta:
         model = Review

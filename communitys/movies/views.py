@@ -12,6 +12,8 @@ from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from .serializers import MovieSerializer, CommentSerializer
 from .models import Movie, Comment
 
+from django.db.models import Q
+
 
 @api_view(['GET'])
 def movie_list_create(request):
@@ -61,3 +63,31 @@ def comment_update_delete(request, comment_pk):
     else:
         comment.delete()
         return Response({ 'id': comment_pk }, status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(['GET'])
+@authentication_classes([JSONWebTokenAuthentication])
+@permission_classes([IsAuthenticated])
+def recommended_1(request):
+    mbti_genres = {
+        1: [28, 10749],
+        2: [10752, 80],
+        3: [10751, 35],
+        4: [10402, 12],
+        5: [53, 80],
+        6: [99, 9648],
+        7: [28, 18],
+        8: [14, 28],
+        9: [99, 10751],
+        10: [878, 28],
+        11: [10749, 16],
+        12: [10749, 14],
+        13: [878, 14],
+        14: [878, 9648],
+        15: [18, 36],
+        16: [27, 53],
+    }]
+
+    movies = Movie.objects.filter(Q(genres = mbti_genres.get(request.user.MBTI)[0]) | Q(genres = mbti_genres.get(request.user.MBTI)[1])).order_by('-vote_average')
+    serializer = MovieSerializer(movies, many =True)
+    return Response(serializer.data)
