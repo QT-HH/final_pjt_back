@@ -25,7 +25,7 @@ SECRET_KEY = 'gkn=kgh-kq(u^txgi1+$1nc*+3+66s)ppmt_27mgklw6g64!0$'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
