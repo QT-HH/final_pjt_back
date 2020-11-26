@@ -25,7 +25,10 @@ SECRET_KEY = 'gkn=kgh-kq(u^txgi1+$1nc*+3+66s)ppmt_27mgklw6g64!0$'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [
+    'finaljjj.herokuapp.com',
+    '127.0.0.1',
+]
 
 
 # Application definition
@@ -144,6 +147,7 @@ from decouple import config
 
 SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
+CORS_ALLOW_HOST = config('CORS_ALLOW_HOST')
 
 import dj_database_url
 db_from_env = dj_database_url.config(conn_max_age=500)
